@@ -46,7 +46,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--body); overf
 .lbl .n { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #264653; color: #fff; font-size: 11px; font-weight: 700; margin-right: 6px; }
 .lbl.site { background: #264653; color: #fff; font-family: var(--display); font-size: 17px; letter-spacing: 3px; padding: 3px 12px 2px; }
 .lbl.street { background: rgba(255, 255, 255, 0.94); color: #0F3C6E; font-weight: 600; font-size: 11px; padding: 2px 8px; border: 1px solid #2896EB; transform-origin: center; }
-.lbl.ring { background: transparent; box-shadow: none; color: #1F2B31; font-weight: 700; font-size: 12px; text-shadow: 0 0 3px #fff, 0 0 3px #fff; }
+.lbl.ring { color: #fff; font-weight: 700; font-size: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28); }
+.lbl.ring.z1 { background: #2E7D32; }
+.lbl.ring.z2 { background: #FFC21A; color: #1F2B31; }
+.lbl.ring.z3 { background: #C62828; }
 
 #panel { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); width: 330px;
   max-height: calc(100% - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column;
@@ -107,6 +110,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .note { font-size: 11px; color: var(--ink2); line-height: 1.45; }
 #credit { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(6px + env(safe-area-inset-bottom, 0px)); font-size: 10px; color: #1F2B31;
   background: rgba(255, 255, 255, 0.72); padding: 2px 8px; border-radius: 6px; pointer-events: none; white-space: nowrap; }
+/* graphic scale: true metres at the centre of the view, measured on the ground every frame */
+#scale { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(30px + env(safe-area-inset-bottom, 0px)); pointer-events: none;
+  background: rgba(255, 255, 255, 0.86); color: #1F2B31; border-radius: 8px; padding: 6px 10px 4px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14); }
+.sb-bar { display: flex; box-sizing: border-box; height: 8px; border: 1.5px solid #1F2B31; margin: 0 auto; }
+.sb-lab { margin: 3px auto 0; }
+.sb-bar i { flex: 1; background: #FFFFFF; }
+.sb-bar i:nth-child(odd) { background: #1F2B31; }
+.sb-lab { position: relative; height: 14px; margin-top: 3px; font: 600 11px/14px var(--body); font-variant-numeric: tabular-nums; }
+.sb-lab span { position: absolute; top: 0; white-space: nowrap; }
+.sb-lab span:nth-child(2) { left: 50%; transform: translateX(-50%); }
+.sb-lab span:nth-child(3) { right: 0; }
+.sb-note { font-size: 9.5px; line-height: 1.2; color: #5A676E; text-align: center; margin-top: 1px; white-space: nowrap; }
+.photo-btn { width: 100%; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.photo-btn svg { width: 16px; height: 16px; flex: none; }
+/* picture mode: panel gone, view frozen, a small toolbar that slides away so the frame is clean for a screenshot */
+#photobar { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; display: flex; align-items: center; gap: 6px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 999px; box-shadow: var(--shadow); padding: 6px 6px 6px 14px;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: opacity 0.35s, transform 0.35s; }
+#photobar[hidden] { display: none; }
+#photobar.away { opacity: 0; transform: translate(-50%, -10px); pointer-events: none; }
+.pb-t { font-family: var(--display); font-size: 18px; letter-spacing: 1px; color: var(--ink); margin-right: 4px; }
+.photo #panel { display: none; }
+.photo #compass { pointer-events: none; }
+.photo.no-legend #legend, .photo.no-labels #labels { display: none; }
 @media (max-width: 720px) {
   #panel { top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 52%; border-radius: 16px 16px 0 0;
     padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -116,6 +143,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   .legend { right: max(16px, env(safe-area-inset-right, 0px)); top: calc(78px + env(safe-area-inset-top, 0px)); bottom: auto; width: 190px; max-height: 34%; padding: 10px 12px; }
   .lg li { font-size: 11.5px; }
   #credit { top: calc(8px + env(safe-area-inset-top, 0px)); bottom: auto; left: 16px; transform: none; max-width: calc(100% - 100px); white-space: normal; }
+  #scale { left: 16px; transform: none; top: calc(48px + env(safe-area-inset-top, 0px)); bottom: auto; }
+  .photo #scale { top: auto; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  #photobar { top: auto; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -182,9 +212,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
           <button class="chip" id="v-hood">Lagjja</button>
           <button class="chip" id="v-top">Nga lart</button>
         </div>
+        <button class="btn photo-btn" id="photo" title="Pamje e ngrirë, gati për screenshot (Esc për të dalë)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 5.3h2.7l1.2-1.8h4.6l1.2 1.8h2.7v7.4H1.8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="8.9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>Modaliteti foto</button>
       </section>
       <p class="hint">Tërhiq për ta rrotulluar · rrota ose dy gishta për zoom · klik i djathtë (ose dy gishta) për ta zhvendosur.</p>
-      <p class="note" id="srcnote">Ndërtesat, rrugët dhe pemët: OpenStreetMap (gusht 2026), të verifikuara me imazhin satelitor. Lartësitë: nga OSM ku janë të shënuara, përndryshe të vlerësuara nga tipi, madhësia dhe hijet (~). Zhurma dhe trafiku janë vlerësime (~).</p>
+      <p class="note" id="srcnote">Ndërtesat, rrugët dhe pemët: OpenStreetMap (gusht 2026), të verifikuara me imazhin satelitor. Lartësitë: nga OSM ku janë të shënuara, përndryshe të vlerësuara nga tipi, madhësia dhe hijet (~). Zhurma dhe trafiku janë vlerësime (~). Shkalla: modeli është në metra nga koordinatat WGS84 të OSM; krahasuar me distancat gjeodezike WGS84, gabimi është nën 0,03 %.</p>
     </div>
   </aside>
   <div id="legend" class="legend" aria-live="polite"></div>
@@ -194,6 +225,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
       <text x="20" y="13.5" text-anchor="middle" font-size="7" font-family="Inter, sans-serif" font-weight="700" fill="#FFFFFF">V</text></svg>
   </button>
   <div id="credit">© OpenStreetMap contributors</div>
+  <div id="scale" role="img" aria-label="Shkalla grafike" hidden><div class="sb-bar" id="sb-bar"><i></i><i></i><i></i><i></i></div><div class="sb-lab"><span>0</span><span id="sb-mid"></span><span id="sb-end"></span></div><div class="sb-note" id="sb-note" hidden>Shkalla vlen në qendër të pamjes</div></div>
+  <div id="photobar" role="toolbar" aria-label="Modaliteti foto" hidden>
+    <span class="pb-t">Foto</span>
+    <button class="chip" id="pb-legend" aria-pressed="true">Legjenda</button>
+    <button class="chip" id="pb-labels" aria-pressed="true">Etiketat</button>
+    <button class="btn" id="pb-exit">Dil · Esc</button>
+  </div>
   <div id="loading">Duke ndërtuar modelin 3D…</div>
 </div>
 
@@ -426,7 +464,10 @@ for (const b of S.buildings) {
   const r0 = nv;
   if (b.rf) pitched(b.rr, h, b.rh, b.rf, false); else flatRoof(b.r, h);
   for (let k = w0; k < r0; k++) BF.push(b.fs || 0); for (let k = r0; k < nv; k++) BF.push(0);
-  bInfo.push([w0, r0 - w0, r0, nv - r0, b.c, b.s ? 1 : 0, b.w, b.k, b.fc || b.w]);
+  // walking-distance zone of the building (its centre against the 400 / 800 / 1 200 m rings around Qafa)
+  const o = b.r[0]; let ox = 0, oy = 0; for (let i = 0; i < o.length; i += 2) { ox += o[i]; oy += o[i + 1]; }
+  const dc = Math.hypot(ox, oy) / (o.length / 2), zone = dc <= 400 ? 0 : dc <= 800 ? 1 : dc <= 1200 ? 2 : 3;
+  bInfo.push([w0, r0 - w0, r0, nv - r0, b.c, b.s ? 1 : 0, b.w, b.k, b.fc || b.w, zone]);
 }
 const bGeo = new THREE.BufferGeometry();
 bGeo.setAttribute('position', new THREE.Float32BufferAttribute(BP, 3));
@@ -508,17 +549,22 @@ function facadeAtlas() {
 const winU = { uWin: { value: 0.55 }, uWinCol: { value: new THREE.Color('#4B5963') } };
 const facU = { uFac: { value: null }, uFacM: { value: null }, uFacOn: { value: 0 }, uNight: { value: 0 } };
 { const [ct, mt] = facadeAtlas(); facU.uFac.value = ct; facU.uFacM.value = mt; }
+// noise on the facades: every wall reads the noise grid 3.5 m in front of it, so the level shows on the buildings instead of hiding under them
+const nzU = { uNz: { value: null }, uNzOn: { value: 0 }, uNzRect: { value: new THREE.Vector4(S.noise.x0, S.noise.y0, S.noise.x1 - S.noise.x0, S.noise.y1 - S.noise.y0) } };
 const bMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, metalness: 0 });
 bMat.onBeforeCompile = sh => {
-  Object.assign(sh.uniforms, winU, satU, facU);
-  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute vec4 aw; attribute float af; varying vec4 vAw; varying vec3 vWp; varying float vUp; varying float vAf;')
-    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvAw = aw; vAf = af; vUp = normal.y; vWp = (modelMatrix * vec4(position, 1.0)).xyz;');
+  Object.assign(sh.uniforms, winU, satU, facU, nzU);
+  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute vec4 aw; attribute float af; varying vec4 vAw; varying vec3 vWp; varying float vUp; varying float vAf; varying vec2 vWn;')
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvAw = aw; vAf = af; vUp = normal.y; vWn = normal.xz; vWp = (modelMatrix * vec4(position, 1.0)).xyz;');
   sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
       uniform float uWin; uniform vec3 uWinCol; uniform sampler2D uSatTex; uniform float uSatOn; uniform vec4 uSatRect;
       uniform sampler2D uSat0; uniform sampler2D uSat1; uniform sampler2D uSat2; uniform sampler2D uSat3;
       uniform vec4 uR0; uniform vec4 uR1; uniform vec4 uR2; uniform vec4 uR3; uniform float uSatHi;
       uniform sampler2D uFac; uniform sampler2D uFacM; uniform float uFacOn; uniform float uNight;
-      varying vec4 vAw; varying vec3 vWp; varying float vUp; varying float vAf;
+      uniform sampler2D uNz; uniform float uNzOn; uniform vec4 uNzRect;
+      varying vec4 vAw; varying vec3 vWp; varying float vUp; varying float vAf; varying vec2 vWn;
+      vec3 nzRamp(float t) { vec3 a = vec3(0.30, 0.70, 0.52), b = vec3(0.97, 0.78, 0.26), c = vec3(0.91, 0.40, 0.18);
+        return t < 0.5 ? mix(a, b, t * 2.0) : mix(b, c, (t - 0.5) * 2.0); }
       float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
       vec3 satTile(sampler2D t, vec4 r, vec2 en, vec2 gx, vec2 gy, inout float hit) {
         vec2 s = (en - r.xy) / r.zw;
@@ -527,6 +573,11 @@ bMat.onBeforeCompile = sh => {
       }`)
     .replace('#include <color_fragment>', `#include <color_fragment>
       vec2 en = vec2(vWp.x, -vWp.z); vec2 enx = dFdx(en), eny = dFdy(en);
+      if (uNzOn > 0.5 && vUp < 0.3) {
+        vec2 nd = vec2(vWn.x, -vWn.y); nd /= max(length(nd), 1e-3);
+        vec2 nuv = (en + nd * 3.5 - uNzRect.xy) / uNzRect.zw;
+        if (nuv.x > 0.0 && nuv.x < 1.0 && nuv.y > 0.0 && nuv.y < 1.0) diffuseColor.rgb = nzRamp(texture(uNz, nuv).r);
+      }
       float afr = floor(vAf + 0.5); float sty = mod(afr, 8.0), shopF = step(7.5, afr);
       float bayW = abs(sty - 4.0) < 0.5 ? 1.6 : 3.2;
       vec2 fq = vec2(vAw.x / bayW, vAw.y / max(vAw.z, 0.5)); vec2 fqx = dFdx(fq), fqy = dFdy(fq);
@@ -578,19 +629,26 @@ const eGeo = new THREE.BufferGeometry(); eGeo.setAttribute('position', new THREE
 const eMesh = new THREE.LineSegments(eGeo, new THREE.LineBasicMaterial({ color: 0x5f5a52, transparent: true, opacity: 0.22 }));
 scene.add(eMesh);
 let base = 'map';
+// buildings carry the colour of the analysis layer switched on last (function, noise or walking distance), so it never hides under them
+const ZW = ['#A5D6A7', '#FFE082', '#EF9A9A', '#EEEBE5'], ZR = ['#66BB6A', '#FFCA28', '#E57373', '#E3DFD8'];
+let colourOrder = [];
+const bMode = () => { for (let i = colourOrder.length - 1; i >= 0; i--) if ($(colourOrder[i]).checked) return colourOrder[i]; return ''; };
 function paintBuildings() {
-  const lu = $('l-lu').checked, a = bGeo.attributes.color.array, cw = new THREE.Color(), cr = new THREE.Color(), white = new THREE.Color(NEUTRAL);
+  const mode = bMode(), a = bGeo.attributes.color.array, cw = new THREE.Color(), cr = new THREE.Color();
   const fill = (o, n, c) => { for (let k = o; k < o + n; k++) { a[k * 3] = c.r; a[k * 3 + 1] = c.g; a[k * 3 + 2] = c.b; } };
-  const fac = base === 'sat' && !lu;
-  for (const [w0, wn, r0, rn, cat, site, wc, rc, fc] of bInfo) {
-    if (lu) { cw.set(LU[cat] || NEUTRAL); if (!site && cat) cw.lerp(white, 0.42); cr.copy(cw); }
+  const fac = base === 'sat' && !mode;
+  for (const [w0, wn, r0, rn, cat, site, wc, rc, fc, zone] of bInfo) {
+    if (mode === 'l-lu') { cw.set(LU[cat] || NEUTRAL); cr.copy(cw); }
+    else if (mode === 'l-dist') { cw.set(ZW[zone]); cr.set(ZR[zone]); }
+    else if (mode === 'l-noise') { cw.set('#F4F2EE'); cr.set('#E6E3DD'); }
     else { cw.set('#' + (fac ? fc : wc)); cr.set('#' + rc); }
     fill(w0, wn, cw); fill(r0, rn, cr);
   }
   bGeo.attributes.color.needsUpdate = true;
-  satU.uSatOn.value = base === 'sat' && !lu && satU.uSatTex.value ? 1 : 0;
+  satU.uSatOn.value = fac && satU.uSatTex.value ? 1 : 0;
   facU.uFacOn.value = fac ? 1 : 0;
-  winU.uWin.value = lu ? 0.25 : 0.55;
+  winU.uWin.value = mode ? 0.25 : 0.55;
+  nzU.uNzOn.value = mode === 'l-noise' ? 1 : 0;
 }
 
 // ---------------------------------------------------------------- vegetation: OSM trees + canopy found in the satellite image
@@ -702,7 +760,7 @@ const noise = new THREE.Group(); noise.visible = false; scene.add(noise);
 const noiseU = { tex: { value: null }, time: { value: 0 } };
 {
   const N = S.noise, w = N.x1 - N.x0, h = N.y1 - N.y0;
-  new THREE.TextureLoader().load(N.png, t => { t.colorSpace = THREE.NoColorSpace; t.minFilter = THREE.LinearFilter; noiseU.tex.value = t; });
+  new THREE.TextureLoader().load(N.png, t => { t.colorSpace = THREE.NoColorSpace; t.minFilter = THREE.LinearFilter; noiseU.tex.value = t; nzU.uNz.value = t; });
   const g = new THREE.PlaneGeometry(w, h); g.rotateX(-Math.PI / 2);
   const mat = new THREE.ShaderMaterial({
     uniforms: noiseU, transparent: true, depthWrite: false,
@@ -723,18 +781,25 @@ const noiseU = { tex: { value: null }, time: { value: 0 } };
 
 // ---------------------------------------------------------------- walking distances: 5/10/15 min zones, routes on the real street network, destinations
 const dist = new THREE.Group(); dist.visible = false; scene.add(dist);
-[[0, 400, '#5B9B57'], [400, 800, '#E2BC4A'], [800, 1200, '#C8524B']].forEach(([r0, r1, col], i) => {
+const ZF = ['#43A047', '#FFB300', '#E53935'], ZB = ['#2E7D32', '#E89B00', '#C62828'];
+// x-ray copy: drawn only where a building or tree stands in front, so zone edges and routes stay readable behind them
+const xray = (c, o) => new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o, depthWrite: false, depthFunc: THREE.GreaterDepth, polygonOffset: true, polygonOffsetFactor: -14, polygonOffsetUnits: -28 });
+[[0, 400], [400, 800], [800, 1200]].forEach(([r0, r1], i) => {
   const g = r0 ? new THREE.RingGeometry(r0, r1, 160) : new THREE.CircleGeometry(r1, 160); g.rotateX(-Math.PI / 2);
-  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.2, depthWrite: false }));
+  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: ZF[i], transparent: true, opacity: 0.3, depthWrite: false }));
   m.position.y = 0.3 + i * 0.01; m.renderOrder = 3; dist.add(m);
-  const pts = []; for (let k = 0; k <= 160; k++) { const a = k / 160 * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * r1, 0.5, Math.sin(a) * r1)); }
-  dist.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: '#FFFFFF', transparent: true, opacity: 0.9 })));
+  const pts = []; for (let k = 0; k < 240; k++) { const a = k / 240 * Math.PI * 2; pts.push([Math.cos(a) * r1, Math.sin(a) * r1]); }
+  const eg = ribbonGeo(pts, 7, 1, true);
+  const edge = new THREE.Mesh(eg, new THREE.MeshBasicMaterial({ color: ZB[i], transparent: true, opacity: 0.95, depthWrite: false }));
+  edge.position.y = 0.55; edge.renderOrder = 8; dist.add(edge);
+  const ghost = new THREE.Mesh(eg, xray(ZB[i], 0.5)); ghost.position.y = 0.55; ghost.renderOrder = 30; dist.add(ghost);
 });
 const routeTex = [];
 for (const d of S.dest) {
   const p = toXZ(d.p);
   const base_ = new THREE.Mesh(ribbonGeo(p, 4.2), new THREE.MeshBasicMaterial({ color: '#FFFFFF', transparent: true, opacity: 0.9, depthWrite: false }));
   base_.position.y = 0.7; base_.renderOrder = 8; dist.add(base_);
+  const gh = new THREE.Mesh(base_.geometry, xray('#264653', 0.6)); gh.position.y = 0.8; gh.renderOrder = 31; dist.add(gh);
   const t = lineTex(1.4, 1, '#264653'); routeTex.push(t);
   const m = new THREE.Mesh(ribbonGeo(p, 2.6, 7), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }));
   m.position.y = 0.8; m.renderOrder = 9; dist.add(m);
@@ -750,7 +815,7 @@ addLabel('QAFA', 'site', new THREE.Vector3(0, 34, 0), null);
 (S.street_labels || []).forEach(([nm, x, y]) => addLabel(nm, 'street', new THREE.Vector3(x, 2, -y), streetsGroup));
 S.dest.forEach((d, i) => { const p = toXZ(d.p), e = d.e ? [d.e[0], -d.e[1]] : p[p.length - 1];
   addLabel(`<span class="n">${i + 1}</span><b>${d.n}</b> · ${d.t} min · ${d.m.toLocaleString('sq-AL')} m`, 'dest', new THREE.Vector3(e[0], 40, e[1]), dist); });
-[[400, '5 min · 400 m'], [800, '10 min · 800 m'], [1200, '15 min · 1 200 m']].forEach(([r, t]) => addLabel(t, 'ring', new THREE.Vector3(r * 0.71, 1, -r * 0.71), dist));
+[[400, '5 min · 400 m'], [800, '10 min · 800 m'], [1200, '15 min · 1 200 m']].forEach(([r, t], i) => addLabel(t, 'ring z' + (i + 1), new THREE.Vector3(r * 0.71, 1, -r * 0.71), dist));
 const v3 = new THREE.Vector3();
 function placeLabels() {
   const w = host.clientWidth, h = host.clientHeight, far = camera.position.distanceTo(controls.target) > 1500;
@@ -817,13 +882,14 @@ function legend() {
   const sw = (c, t) => `<li><span class="sq" style="background:${c}"></span>${t}</li>`;
   if ($('l-streets').checked) blocks.push(`<div class="lg"><h3>Rrugët</h3><ul><li><span class="sq" style="background:#78CDFF;border:1px solid #2896EB"></span>Rrugët pranë Qafës (300 m)</li></ul></div>`);
   const ln = (c, t, w = 4) => `<li><span class="ln" style="border-top-color:${c};border-top-width:${w}px"></span>${t}</li>`;
-  if ($('l-lu').checked) blocks.push(`<div class="lg"><h3>Funksioni</h3><ul>${sw(LU.banim, 'Banim')}${sw(LU.tregti, 'Tregti dhe shërbime')}${sw(LU.kafe, 'Kafene (Qafa)')}${sw(LU.arsim, 'Arsim')}${sw(LU.historik, 'Historike / kulturore')}${sw(LU.sport, 'Sport')}</ul><p class="note" style="margin:6px 0 0">Ngjyrat e plota: ndërtesat e Qafës.</p></div>`);
+  const bm = bMode(), bnote = t => `<p class="note" style="margin:6px 0 0">${t}</p>`;
+  if (bm === 'l-lu') blocks.push(`<div class="lg"><h3>Funksioni</h3><ul>${sw(LU.banim, 'Banim')}${sw(LU.tregti, 'Tregti dhe shërbime')}${sw(LU.kafe, 'Kafene (Qafa)')}${sw(LU.arsim, 'Arsim')}${sw(LU.historik, 'Historike / kulturore')}${sw(LU.sport, 'Sport')}</ul></div>`);
   if ($('l-park').checked) blocks.push(`<div class="lg"><h3>Parkingu</h3><ul>${base === 'map' ? sw('#C6CACF', 'Parking (OSM)') : ''}${sw('#B9BFC6', 'Parking (Qafa)')}<li><span class="sq" style="background:repeating-linear-gradient(45deg,#8D949C 0 2px,#E3E5E8 2px 6px)"></span>Parkim i parregullt</li></ul></div>`);
   if ($('l-green').checked) blocks.push(`<div class="lg"><h3>Gjelbërimi</h3><ul>${base === 'map' ? sw('#C3DCAF', 'Hapësirë e gjelbër') + sw('#A9CB97', 'Pyll') : ''}${sw('#6FA65B', 'Pemë')}</ul></div>`);
   if ($('l-traffic').checked) blocks.push(`<div class="lg"><h3>Trafiku</h3><ul>${ln('#1D3557', 'Rrugë kryesore', 6)}${ln('#FFB703', 'Rrugë dytësore', 5)}${ln('#5E8FB8', 'Rrugë lokale', 4)}${ln('#9AA7B6', 'Rrugë shërbimi / parkingu', 3)}${sw('#3B4650', 'Automjete (animim)')}</ul></div>`);
   if ($('l-walk').checked) blocks.push(`<div class="lg"><h3>Këmbësorët</h3><ul><li><span class="ln" style="border-top:4px dashed #C1121F"></span>Lëvizje e lartë</li><li><span class="ln" style="border-top:3px dashed #1F2B31"></span>Lëvizje e mesme</li></ul><p class="note" style="margin:6px 0 0">Në të dy drejtimet, nëpër trotuaret reale.</p></div>`);
-  if ($('l-noise').checked) blocks.push(`<div class="lg"><h3>Zhurma (~)</h3><div class="grad"></div><div class="gl"><span>&lt; 50 dB</span><span>60</span><span>&gt; 70 dB</span></div><ul style="margin-top:6px"><li><span class="ln" style="border-top-color:#8E6CC9"></span>Valët e zhurmës nga rrugët</li></ul></div>`);
-  if ($('l-dist').checked) blocks.push(`<div class="lg"><h3>Distancat me këmbë</h3><ul>${sw('rgba(91,155,87,0.45)', '5 min · 400 m')}${sw('rgba(226,188,74,0.5)', '10 min · 800 m')}${sw('rgba(200,82,75,0.45)', '15 min · 1 200 m')}<li><span class="ln" style="border-top:3px dashed #264653"></span>Rruga reale e ecjes · 80 m/min</li></ul></div>`);
+  if ($('l-noise').checked) blocks.push(`<div class="lg"><h3>Zhurma (~)</h3><div class="grad"></div><div class="gl"><span>&lt; 50 dB</span><span>60</span><span>&gt; 70 dB</span></div><ul style="margin-top:6px"><li><span class="ln" style="border-top-color:#8E6CC9"></span>Valët e zhurmës nga rrugët</li></ul>${bm === 'l-noise' ? bnote('Fasadat: zhurma përpara secilës fasadë.') : ''}</div>`);
+  if ($('l-dist').checked) blocks.push(`<div class="lg"><h3>Distancat me këmbë</h3><ul>${sw(ZF[0], '5 min · 400 m')}${sw(ZF[1], '10 min · 800 m')}${sw(ZF[2], '15 min · 1 200 m')}<li><span class="ln" style="border-top:3px dashed #264653"></span>Rruga reale e ecjes · 80 m/min</li></ul>${bm === 'l-dist' ? bnote('Ndërtesat marrin ngjyrën e zonës ku ndodhen.') : ''}</div>`);
   legendBox.innerHTML = blocks.join('');
 }
 function syncLayers() {
@@ -850,6 +916,7 @@ function setBase(b) {
 $('b-map').addEventListener('click', () => setBase('map'));
 $('b-sat').addEventListener('click', () => setBase('sat'));
 ['l-streets', 'l-lu', 'l-green', 'l-park', 'l-traffic', 'l-walk', 'l-noise', 'l-dist', 'l-shadow'].forEach(id => $(id).addEventListener('change', () => {
+  if (['l-lu', 'l-noise', 'l-dist'].includes(id) && $(id).checked) colourOrder = colourOrder.filter(k => k !== id).concat(id);
   if (id === 'l-dist' && $(id).checked) fly('hood');
   syncLayers();
 }));
@@ -891,6 +958,51 @@ $('compass').addEventListener('click', () => {
 });
 function requestRender() { /* continuous loop; kept for texture callbacks */ }
 
+// ---------------------------------------------------------------- scale bar: metres per screen pixel at the centre of the view
+// two rays 100 px apart through the screen centre meet the ground; the model is in true metres (OSM WGS84 coordinates, local projection)
+const scaleEl = $('scale'), sbBar = $('sb-bar'), sbLab = scaleEl.querySelector('.sb-lab'), sbMid = $('sb-mid'), sbEnd = $('sb-end'), sbNote = $('sb-note');
+const gRay = new THREE.Raycaster(), gPl = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), gA = new THREE.Vector3(), gB = new THREE.Vector3(), gN = new THREE.Vector2(), gOff = new THREE.Vector3();
+let scaleKey = '', mppNow = 0;
+function groundHit(px, py, out) { gN.set(px / host.clientWidth * 2 - 1, 1 - py / host.clientHeight * 2); gRay.setFromCamera(gN, camera); return gRay.ray.intersectPlane(gPl, out); }
+const numSq = v => v.toLocaleString('sq-AL', { maximumFractionDigits: 2 });
+function updateScale() {
+  const w = host.clientWidth, h = host.clientHeight;
+  const a = groundHit(w / 2 - 50, h / 2, gA), b = a && groundHit(w / 2 + 50, h / 2, gB);
+  if (!a || !b) { scaleEl.hidden = true; scaleKey = ''; return; }
+  const mpp = a.distanceTo(b) / 100; mppNow = mpp;
+  const lim = mpp * (small ? 130 : 190), p10 = 10 ** Math.floor(Math.log10(lim)), L = [5, 2, 1].map(k => k * p10).find(v => v <= lim) || p10;
+  const px = L / mpp, tilt = Math.acos(Math.min(1, gOff.copy(camera.position).sub(controls.target).normalize().y)) * 180 / Math.PI;
+  const key = `${L}|${px.toFixed(1)}|${tilt > 4}`;
+  if (key === scaleKey) return; scaleKey = key;
+  const km = L >= 1000;
+  sbBar.style.width = sbLab.style.width = px.toFixed(1) + 'px';
+  sbMid.textContent = numSq(km ? L / 2000 : L / 2); sbMid.hidden = px < 105;
+  sbEnd.textContent = km ? `${numSq(L / 1000)} km` : `${numSq(L)} m`;
+  sbNote.hidden = tilt <= 4; scaleEl.hidden = false;
+}
+
+// ---------------------------------------------------------------- picture mode: the view freezes, the panel goes, scale, north arrow, legend and credits stay
+const appEl = $('app'), pbar = $('photobar');
+let photo = false, pbT = 0, animT = 0;
+function pbShow(ms = 2600) {
+  pbar.classList.remove('away'); clearTimeout(pbT);
+  if (ms) pbT = setTimeout(() => { if (!pbar.contains(document.activeElement)) pbar.classList.add('away'); }, ms);
+}
+function setPhoto(on) {
+  photo = on; appEl.classList.toggle('photo', on); pbar.hidden = !on; controls.enabled = !on;
+  if (on) pbShow(); else { clearTimeout(pbT); $('photo').focus({ preventScroll: true }); }
+}
+$('photo').addEventListener('click', () => setPhoto(true));
+$('pb-exit').addEventListener('click', () => setPhoto(false));
+[['pb-legend', 'no-legend'], ['pb-labels', 'no-labels']].forEach(([id, cls]) => $(id).addEventListener('click', () => {
+  const on = $(id).getAttribute('aria-pressed') !== 'true'; $(id).setAttribute('aria-pressed', String(on)); appEl.classList.toggle(cls, !on);
+}));
+addEventListener('keydown', e => { if (e.key === 'Escape' && photo) setPhoto(false); });
+addEventListener('pointermove', e => { if (photo && e.pointerType === 'mouse' && (e.clientY < 90 || pbar.matches(':hover'))) pbShow(); });
+host.addEventListener('pointerdown', e => { if (photo && e.pointerType !== 'mouse') pbShow(); });
+pbar.addEventListener('focusin', () => pbShow(0));
+pbar.addEventListener('focusout', () => pbShow());
+
 // ---------------------------------------------------------------- loop
 camera.position.set(...VIEWS.site.pos); controls.target.set(...VIEWS.site.tgt); controls.update();
 state.min = 840; dayTimes();
@@ -906,12 +1018,12 @@ function frame() {
     if (flight.t >= 1) flight = null;
   }
   controls.update();
-  if (state.playing) { state.min += dt * 48; if (state.min > set + 25) state.min = rise - 20; applySun(); }
+  if (state.playing && !photo) { state.min += dt * 48; if (state.min > set + 25) state.min = rise - 20; applySun(); }
   else { sun.target.position.copy(controls.target); }
   const camDist = camera.position.distanceTo(controls.target);
   detail.visible = camDist < 700;
-  const motion = reduceMotion ? 0.25 : 1;
-  if (noise.visible) noiseU.time.value = t * motion;
+  const motion = photo ? 0 : reduceMotion ? 0.25 : 1; animT += dt * motion;
+  if (noise.visible) noiseU.time.value = animT;
   if (walk.visible) walkTex.forEach(([tx, side]) => { tx.offset.x -= dt * 0.55 * side * motion; });
   if (dist.visible) routeTex.forEach(tx => { tx.offset.x -= dt * 0.45 * motion; });
   if (traffic.visible) {
@@ -928,13 +1040,14 @@ function frame() {
   const off = camera.position.clone().sub(controls.target);
   compassSvg.style.transform = `rotate(${(Math.atan2(off.x, off.z) * 180 / Math.PI).toFixed(1)}deg)`;
   renderer.render(scene, camera);
-  placeLabels();
+  updateScale(); placeLabels();
   requestAnimationFrame(frame);
 }
 addEventListener('resize', () => { renderer.setSize(host.clientWidth, host.clientHeight); camera.aspect = host.clientWidth / host.clientHeight; camera.updateProjectionMatrix(); });
 $('loading').hidden = true;
 window.__qafaReady = true;
-window.__qafa = { setBase, fly, camera, controls, state, applySun, syncLayers, satReady: () => satState };
+window.__qafa = { setBase, fly, camera, controls, state, applySun, syncLayers, satReady: () => satState, setPhoto, scale: () => mppNow,
+  px: (x, y) => { const v = new THREE.Vector3(x, 0, -y).project(camera); return [(v.x + 1) / 2 * host.clientWidth, (1 - v.y) / 2 * host.clientHeight]; } };
 requestAnimationFrame(frame);
 </script>
 
